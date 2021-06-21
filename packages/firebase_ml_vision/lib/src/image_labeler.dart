@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// @dart=2.9
-
 part of firebase_ml_vision;
 
 /// Used for finding [ImageLabel]s in a supplied image.
@@ -28,11 +26,10 @@ part of firebase_ml_vision;
 /// ```
 class ImageLabeler {
   ImageLabeler._({
-    @required ImageLabelerOptions options,
-    @required int handle,
-  })  : _options = options,
-        _handle = handle,
-        assert(options != null);
+    required ImageLabelerOptions options,
+    required int handle,
+  })   : _options = options,
+        _handle = handle;
 
   final ImageLabelerOptions _options;
   final int _handle;
@@ -45,7 +42,7 @@ class ImageLabeler {
 
     _hasBeenOpened = true;
     final List<dynamic> reply =
-        await FirebaseVision.channel.invokeListMethod<dynamic>(
+        (await FirebaseVision.channel.invokeListMethod<dynamic>(
       'ImageLabeler#processImage',
       <String, dynamic>{
         'handle': _handle,
@@ -53,7 +50,7 @@ class ImageLabeler {
           'confidenceThreshold': _options.confidenceThreshold,
         },
       }..addAll(visionImage._serialize()),
-    );
+    ))!;
 
     final List<ImageLabel> labels = <ImageLabel>[];
     for (final dynamic data in reply) {
